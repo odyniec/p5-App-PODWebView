@@ -3,7 +3,7 @@ package App::PODWebView;
 use strict;
 use warnings;
 
-# FIXME: Add ABSTRACT
+# ABSTRACT: Preview POD converted to HTML in a web browser
 
 # VERSION
 

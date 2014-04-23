@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=<% settings.charset %>" />
+    <title>POD Web View</title>
+    <meta name="description" content="Preview your POD (Plain Old Documentation) file as it will
+    appear on CPAN Search, MetaCPAN, and GitHub." />
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Grab jQuery from a CDN, fall back to local if necessary -->
+    <script src="//code.jquery.com/jquery-2.1.0.min.js"></script>
+    <script type="text/javascript">/* <![CDATA[ */
+        !window.jQuery && document.write('<script type="text/javascript" src="<% request.uri_base %>/javascripts/jquery-2.1.0.min.js"><\/script>')
+    /* ]]> */</script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  </head>
+
+  <body>
+    <div id="wrap">
+      <nav class="navbar navbar-default navbar-fixed-top navbar-inverse" role="navigation">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/"><strong>POD Web View</strong></a>
+          </div>
+
+          <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+              <li>
+                <p class="navbar-text">
+                  Style: &nbsp;
+                </p>
+              </li>
+              <li>
+                <button type="button" class="btn btn-default navbar-btn dropdown-toggle" data-toggle="dropdown">
+                  <span>Select style</span> <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                  <li data-style="cpan"><a href="#">CPAN</a></li>
+                  <li data-style="metacpan"><a href="#">Metacpan</a></li>
+                  <li data-style="github"><a href="#">GitHub</a></li>
+                  <li data-style="none"><a href="#">None (plain HTML)</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>  
+        </div>
+      </nav>
+
+      <main class="container">
+        <% content %>
+      </main>
+    </div>
+
+    <div id="footer">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+            Hacked together by
+            <a href="http://odyniec.net/">Michał Wojciechowski</a>
+          </div>
+          <div class="col-md-4">
+          </div>
+          <div class="col-md-4 text-right">
+            Powered by
+            <a href="http://www.perl.org/">
+              <img src="/images/perl5-raptor-40.png" /></a>
+            and
+            <a href="http://perldancer.org/">
+              <img src="/images/dancer-logo-2-40.png" />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

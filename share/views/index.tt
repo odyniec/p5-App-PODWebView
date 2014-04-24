@@ -1,0 +1,144 @@
+<script type="text/javascript">
+var submitTimer, currentStyle = '';
+var stylesheets = {
+    'cpan': [
+        '/css/pod-stylesheets/orig/cpan.css',
+        '/css/pod-stylesheets/cpan.css'
+    ],
+    'metacpan': [
+        '/css/pod-stylesheets/orig/metacpan.css',
+        '/css/pod-stylesheets/metacpan/shCore.css',
+        '/css/pod-stylesheets/metacpan/shThemeDefault.css',
+        '/css/pod-stylesheets/metacpan.css'
+    ],
+    'github': [
+        '/css/pod-stylesheets/orig/github.css',
+        '/css/pod-stylesheets/github.css'
+    ],
+    'none': []
+};
+
+var scripts = {
+    'cpan': [],
+    'metacpan': [
+        '/javascripts/metacpan/shCore.js',
+        '/javascripts/metacpan/shBrushCPANChanges.js',
+        '/javascripts/metacpan/shBrushCpp.js',
+        '/javascripts/metacpan/shBrushDiff.js',
+        '/javascripts/metacpan/shBrushJScript.js',
+        '/javascripts/metacpan/shBrushPerl.js',
+        '/javascripts/metacpan/shBrushPlain.js',
+        '/javascripts/metacpan/shBrushYaml.js',
+        '/javascripts/metacpan/metacpan.js'
+    ],
+    'github': [],
+    'none': []
+};
+
+var formatters = {
+    'cpan': function (doc) {},
+    'metacpan': function (doc) {
+        $('pre', doc).attr('class', 
+            "brush: pl; class-name: 'highlight'; toolbar: false; gutter: false");
+    },
+    'github': function (doc) {},
+    'none': function (doc) {}
+};
+
+var origHTML;
+
+function prepareDocument() {
+    if (origHTML === undefined)
+        return;
+
+    var html = origHTML;
+
+    /* Add stylesheet(s) for the currently selected style */
+    $.each(stylesheets[currentStyle], function (index, value) {
+        html = html.replace(/<\/head>/,
+            '<link class="pod-stylesheet" rel="stylesheet" ' +
+            'type="text/css" href="' + value + '"></head>');
+    });
+
+    $.each(scripts[currentStyle], function (index, value) {
+        html = html.replace(/<\/body>/,
+            '<script type="text/javascript" class="pod-script" defer ' +
+            'src="' + value + '"></scr' + 'ipt></body>');
+    });
+
+    var $iframe1 = $('<iframe class="output-frame"></iframe>'),
+        $iframe2 = $('<iframe class="output-frame"></iframe>');
+
+    /* Keep the output iframe's scrollbar position */
+    var outputScrollTop = $('#output').contents().scrollTop();
+
+    $iframe1.hide();
+    $iframe1.insertAfter($('.output-frame').eq(0));
+    $('.output-frame').eq(0).remove();
+    $iframe1.attr('id', 'output');
+    $iframe1.show();
+    
+    $iframe2.insertAfter($('.output-frame').eq(1));
+    $('.output-frame').eq(1).remove();
+    
+    $(window).resize();
+
+    $('.output-frame').each(function () {
+        var doc = $(this)[0].contentDocument;
+
+        doc.open();
+        doc.write(html);
+        formatters[currentStyle](doc);
+        doc.close();
+    });
+
+    /* Move the scrollbar to where it was before the update */
+    $iframe1.contents().scrollTop(outputScrollTop);
+}
+
+function applyStyle(style) {
+    if (style === undefined) {
+        style = $('#style-select li.active').data('style');
+    }
+
+    if (style === undefined) {
+        style = 'cpan';
+    }
+
+    if (style == currentStyle)
+        return;
+
+    currentStyle = style;
+
+    prepareDocument();
+}
+
+$(function () {
+    $('.dropdown-toggle').dropdown();
+
+    /* Style selection dropdown */
+    $('#style-select li').click(function (event) {
+        $('#style-select button span:first-child').text($(this).text());
+        applyStyle($(this).data('style'));
+    });
+
+    /* Select CPAN initially */
+    $('#style-select li[data-style="cpan"]').click();
+
+    /* Adjust output frame dimensions when the window is resized */
+    $(window).resize(function () {
+        $('main.container').css('height', 
+            ($(window).height() - $('#wrap .navbar').outerHeight(true) -
+                $('#footer').outerHeight(true))
+        );
+
+        $('#output').height($('#footer').offset().top - 
+            $('#output').offset().top - 20);
+    });
+
+    /* Trigger the resize event to initially adjust dimensions */
+    $(window).resize();
+});
+</script>
+
+<iframe id="output" class="output-frame" src="about:blank"></iframe>
